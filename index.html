@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日经文</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300&display=swap');
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Noto Sans SC', sans-serif;
+            cursor: pointer;
+        }
+        .canvas-container {
+            position: relative;
+            width: 380px;
+            height: 700px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .background-image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1; /* 确保背景图片在最底层 */
+        }
+        .verse-box {
+            font-size: 18px;
+            color: white;
+            font-weight: normal;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .english-verse-box {
+            font-size: 16px;
+            color: white;
+            font-style: italic;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .reference-box {
+            font-size: 16px;
+            color: white;
+            font-weight: normal;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas-container" onclick="showVerse()">
+        <img src="https://img.alicdn.com/imgextra/i3/O1CN01FSw38T1Ne6L2mg3Mb_!!6000000001594-2-tps-936-1200.png" alt="背景图片" class="background-image">
+        <div class="verse-box"></div>
+        <div class="english-verse-box"></div>
+        <div class="reference-box"></div>
+    </div>
+
+    <script>
+        const verses = [
+            ["神爱世人，甚至将他的独生子赐给他们，叫一切信他的，不至灭亡，反得永生。", "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.", "约翰福音 3:16"],
+            ["你要尽心、尽性、尽意、尽力爱主你的神。", "You shall love the Lord your God with all your heart, and with all your soul, and with all your mind, and with all your strength.", "马可福音 12:30"],
+            ["所以你们要去，使万民作我的门徒，奉父子圣灵的名给他们施洗。", "Go therefore and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit,", "马太福音 28:19"],
+            ["因为世人都犯了罪，亏缺了神的荣耀。", "For all have sinned and fall short of the glory of God.", "罗马书 3:23"],
+            ["凡劳苦担重担的人可以到我这里来，我要使你们得安息。", "Come to me, all you who are weary and burdened, and I will give you rest.", "马太福音 11:28"],
+            ["你们要先求他的国和他的义，这些东西都要加给你们了。", "But seek first his kingdom and his righteousness, and all these things will be added to you.", "马太福音 6:33"],
+            ["因为我活着就是为主而活；死了就有益处。", "For to me, living is Christ and dying is gain.", "腓立比书 1:21"],
+            ["那召你们的既是圣洁，召你们的使者也是圣洁，圣洁的人凡事都当圣洁。", "Since we have such a hope, we are very bold, not like Moses, who put a veil over his face so that the Israelites could not see the end of what was passing away.", "彼得前书 1:15"],
+            ["不要怕，只管放心，你的女儿已经好了。", "Do not fear, only believe.", "路加福音 8:50"],
+            ["他必用自己的血叫教会成为圣洁，无有瑕疵皱纹等类的；乃是圣洁没有瑕疵的。", "He presented himself before God as a sacrifice of a sweet-smelling aroma, pleasing to God through Jesus Christ.", "以弗所书 5:27"],
+            ["因为神本性一切的丰盛都有形有体地居住在基督里面。", "In Christ all the fullness of the Deity lives in bodily form,", "歌罗西书 2:9"],
+            ["然而我的话不是出于私意，乃是在父那里听见的，向你们报明。", "My words are not just my own, but they reflect the Father who sent me.", "约翰福音 15:15"],
+            ["你们中间谁愿意作门徒呢？就要舍己，背起他的十字架来跟从我。", "If anyone would come after me, he must deny himself and take up his cross and follow me.", "马可福音 8:34"],
+            ["人若爱生命，愿享美福，就当禁止舌头不出恶言，嘴唇不说诡诈的话。", "Whoever loves his life will lose it, while whoever loses his life for me will find it.", "马太福音 16:25"],
+            ["但如今藉着基督的血，既已来到至圣所，又既然有了大祭司治理房屋——这大祭司是照着麦基洗德的等次永远活着的，", "Now we do not have a high priest who is unable to sympathize with our weaknesses, but we have one who has been tempted in every way, just as we are—yet he did not sin.", "希伯来书 4:15"],
+            ["又要彼此相顾，激发爱心，勉励行善。", "Encourage one another daily, as long as it is called Today, so that none of you may be hardened by sin’s deceitfulness.", "希伯来书 3:13"],
+            ["因为他曾一次在大卫的日子借着天使说：‘你同我说过了，复起，建造殿宇给我居住。’", "See, I am doing a new thing! Now it springs forth; can you not perceive it? I am making a way in the wilderness and streams in the wasteland.", "以赛亚书 43:19"],
+            ["因为凡遵守全律法的，只在一条上跌倒，他就是犯了众条。", "For whoever keeps the whole law and yet stumbles at just one point is guilty of breaking all of it.", "雅各书 2:10"],
+            ["因为神赐给我们不是胆怯的心，而是刚强、仁爱、谨守的心。", "For God did not give us a spirit of timidity, but a spirit of power, of love and of self-discipline.", "提多书 2:12"],
+            ["亲爱的弟兄啊，不要自己发明道理，却要牢牢抓住那交托给你们的信心。”", "So build yourselves up in your most holy faith and pray in the Holy Spirit.", "犹大书 20"],
+            ["你们要常常喜乐，不住地祷告，凡事谢恩；因这是神在基督耶稣里向你们所定的旨意。", "Rejoice always, pray continually, give thanks in everything; for this is God’s will for you in Christ Jesus.", "帖撒罗尼迦前书 5:16-18"],
+            ["我们晓得万事都互相效力，叫爱神的人得益处，就是按他旨意被召的人。", "And we know that in all things God works for the good of those who love him, who have been called according to his purpose.", "罗马书 8:28"],
+            ["因为知道我们的旧人和他同钉十字架，使罪身灭绝，叫我们不再作罪的奴仆。", "Knowing this, that our old self was crucified with him, that our bodies might no longer be slaves to sin.", "罗马书 6:6"],
+            ["所以我们现在服事的是这位神，好像事奉一位能看见的神；因为我们众人在他面前或是显为露体，或是隐秘的事都被显露出来。", "For since we must all appear before the judgment seat of Christ, let us consider how we may please him.", "哥林多后书 5:10"],
+            ["因为凡立志在基督耶稣里敬虔度日的人都敬畏神，得以忍耐等候那有公义审判的神，就是那灵救了我们，也必将我们变化成祂的形象，荣上天去。", "For everyone who calls on the name of the Lord must confess that Jesus Christ has come in the flesh.", "提多书 2:13"]
+        ];
+
+        let currentVerseIndex = -1;
+
+        function showVerse() {
+            currentVerseIndex = (currentVerseIndex + 1) % verses.length;
+            const selectedVerse = verses[currentVerseIndex];
+            const verseBox = document.querySelector('.verse-box');
+            const englishVerseBox = document.querySelector('.english-verse-box');
+            const referenceBox = document.querySelector('.reference-box');
+
+            verseBox.textContent = selectedVerse[0];
+            englishVerseBox.textContent = selectedVerse[1];
+            referenceBox.textContent = selectedVerse[2];
+        }
+
+        // 初始显示一条经文
+        window.onload = showVerse;
+    </script>
+</body>
+</html>
+
+
+
