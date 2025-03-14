@@ -95,11 +95,13 @@
             ["因为凡立志在基督耶稣里敬虔度日的人都敬畏神，得以忍耐等候那有公义审判的神，就是那灵救了我们，也必将我们变化成祂的形象，荣上天去。", "For everyone who calls on the name of the Lord must confess that Jesus Christ has come in the flesh.", "提多书 2:13"]
         ];
 
-        let currentVerseIndex = -1;
+        function getRandomVerse() {
+            const randomIndex = Math.floor(Math.random() * verses.length);
+            return verses[randomIndex];
+        }
 
         function showVerse() {
-            currentVerseIndex = (currentVerseIndex + 1) % verses.length;
-            const selectedVerse = verses[currentVerseIndex];
+            const selectedVerse = getRandomVerse();
             const verseBox = document.querySelector('.verse-box');
             const englishVerseBox = document.querySelector('.english-verse-box');
             const referenceBox = document.querySelector('.reference-box');
